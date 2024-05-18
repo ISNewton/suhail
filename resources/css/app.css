@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: "Tajawal";
+    src: local('Tajwal'), url('../fonts/Tajawal-Regular.ttf') format('truetype');
+}
+
+* {
+    font-family: Tajawal, sans-serif;
+}
