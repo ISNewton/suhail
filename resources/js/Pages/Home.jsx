@@ -4,6 +4,7 @@ import Hero from "../Components/Hero.tsx";
 import StepsSection from "../Components/StepsSection.tsx";
 import PricingSection from "../Components/PricingSection.tsx";
 import OurMessage from "../Components/OurMessage.tsx";
+import Footer from "../Layout/Footer.tsx";
 export default function Home() {
     return (
         <div>
@@ -12,6 +13,7 @@ export default function Home() {
             <StepsSection />
             <PricingSection />
             <OurMessage />
+            <Footer />
 
         </div>
 )
