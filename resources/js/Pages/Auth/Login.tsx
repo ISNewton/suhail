@@ -7,16 +7,14 @@ import {Link, useForm} from "@inertiajs/react";
 
 export default () => {
     const { data, setData, post, processing, errors } = useForm({
-        full_name: '',
         email: '',
         password: '',
-        password_confirmation: '',
     })
 
     function submit(e) {
         e.preventDefault()
 
-        post('/auth/register')
+        post('/auth/login')
         console.log(errors)
     }
 
@@ -32,18 +30,10 @@ export default () => {
                     </div>
                     <div className="mt-12 flex flex-col items-center">
                         <h1 className="text-2xl xl:text-3xl font-extrabold">
-                            انشاء حساب جديد
+                            تسجيل الدخول
                         </h1>
                         <div className="w-full flex-1 mt-8">
                             <form onSubmit={submit} className="flex max-w-md flex-col gap-4">
-                                <CustomTextInput
-                                    label="الاسم بالكامل"
-                                    id="full_name"
-                                    type="text"
-                                    errors={errors.full_name}
-                                    value={data.full_name}
-                                    onChange={(e) => setData('full_name', e.target.value)}
-                                />
 
                                 <CustomTextInput
                                     label="البريد الالكتروني"
@@ -63,21 +53,11 @@ export default () => {
                                     value={data.password}
                                     onChange={(e) => setData('password', e.target.value)}
                                 />
-                                <CustomTextInput
-                                    label="تأكيد كلمة المرور"
-                                    id="password_confirmation"
-                                    type="password"
-                                    errors={errors.password}
-                                    value={data.password_confirmation}
-                                    onChange={(e) => setData('password_confirmation', e.target.value)}
-                                />
-                                <PrimaryButton type="submit">التالي</PrimaryButton>
+                                <PrimaryButton type="submit">تأكيد</PrimaryButton>
                             </form>
-
                             <p
-                                className="mt-4 text-sm text-gray-500 dark:text-gray-400">لديك حساب بالفعل؟ <Link
-                                href="/auth/login"
-                                className="font-medium text-blue-600 hover:underline dark:text-blue-500">تسجيل الدخول</Link>.</p>
+                               className="mt-4 text-sm text-gray-500 dark:text-gray-400">ليس لديك حساب بعد ؟ <Link href="/auth/register"
+                                            className="font-medium text-blue-600 hover:underline dark:text-blue-500">أنشاء حساب جديد</Link>.</p>
                         </div>
                     </div>
                 </div>

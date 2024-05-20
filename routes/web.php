@@ -10,5 +10,12 @@ Route::get('/auth/register', function () {
     return Inertia::render('Auth/Register');
 })->name('home');
 
+Route::get('auth/login', function() {
+
+    return Inertia::render('Auth/Login');
+})->name('auth.login');
+
 Route::post('auth/register', [AuthController::class, 'register'])->name('auth.register');
+
+Route::post('auth/login', [AuthController::class, 'login'])->name('auth.login');
 
