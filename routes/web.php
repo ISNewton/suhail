@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -13,9 +14,16 @@ Route::get('/auth/register', function () {
 Route::get('auth/login', function() {
 
     return Inertia::render('Auth/Login');
-})->name('auth.login');
+})->name('login');
 
 Route::post('auth/register', [AuthController::class, 'register'])->name('auth.register');
 
 Route::post('auth/login', [AuthController::class, 'login'])->name('auth.login');
+
+
+
+Route::group(['middleware' => 'auth'], function() {
+
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+});
 
