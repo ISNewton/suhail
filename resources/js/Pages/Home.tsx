@@ -8,13 +8,10 @@ import Footer from "../Layout/Footer.tsx";
 export default function Home() {
     return (
         <div>
-            <Navbar />
             <Hero />
             <StepsSection />
             <PricingSection />
             <OurMessage />
-            <Footer />
-
         </div>
 )
 }
