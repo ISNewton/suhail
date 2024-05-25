@@ -1,24 +1,11 @@
 import {Checkbox, Label, TextInput} from "flowbite-react";
-import PrimaryButton from "../../Shared/PrimaryButton";
 import CustomTextInput from "../../Shared/CustomTextInput";
 import {useRememberedState} from "@inertiajs/react/types/useRemember";
 import {useState} from 'react'
 import {Link, useForm} from "@inertiajs/react";
+import RegisterForm from "../../Shared/Forms/RegisterForm";
 
 export default () => {
-    const { data, setData, post, processing, errors } = useForm({
-        full_name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
-    })
-
-    function submit(e) {
-        e.preventDefault()
-
-        post('/auth/register')
-        console.log(errors)
-    }
 
     return (
         <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
@@ -35,44 +22,8 @@ export default () => {
                             انشاء حساب جديد
                         </h1>
                         <div className="w-full flex-1 mt-8">
-                            <form onSubmit={submit} className="flex max-w-md flex-col gap-4">
-                                <CustomTextInput
-                                    label="الاسم بالكامل"
-                                    id="full_name"
-                                    type="text"
-                                    errors={errors.full_name}
-                                    value={data.full_name}
-                                    onChange={(e) => setData('full_name', e.target.value)}
-                                />
 
-                                <CustomTextInput
-                                    label="البريد الالكتروني"
-                                    id="email"
-                                    type="email"
-                                    errors={errors.email}
-                                    value={data.email}
-                                    onChange={(e) => setData('email', e.target.value)}
-                                />
-
-
-                                <CustomTextInput
-                                    label="كلمة المرور"
-                                    id="password"
-                                    type="password"
-                                    errors={errors.password}
-                                    value={data.password}
-                                    onChange={(e) => setData('password', e.target.value)}
-                                />
-                                <CustomTextInput
-                                    label="تأكيد كلمة المرور"
-                                    id="password_confirmation"
-                                    type="password"
-                                    errors={errors.password}
-                                    value={data.password_confirmation}
-                                    onChange={(e) => setData('password_confirmation', e.target.value)}
-                                />
-                                <PrimaryButton type="submit">التالي</PrimaryButton>
-                            </form>
+                            <RegisterForm/>
 
                             <p
                                 className="mt-4 text-sm text-gray-500 dark:text-gray-400">لديك حساب بالفعل؟ <Link

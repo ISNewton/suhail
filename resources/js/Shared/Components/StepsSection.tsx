@@ -1,6 +1,6 @@
-import PrimaryButton from "../Shared/PrimaryButton";
-import { default as RandomElement} from '../assets/svg/RandomElement.svg'
-import { default as OrangeElement} from '../assets/svg/OrangeElement.svg'
+import PrimaryButton from "../PrimaryButton";
+import { default as RandomElement} from '../../assets/svg/RandomElement.svg'
+import { default as OrangeElement} from '../../assets/svg/OrangeElement.svg'
 
 export default () => {
     return (

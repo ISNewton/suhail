@@ -1,35 +1,50 @@
+// import {
+//     Breadcrumb,
+//     BreadcrumbEllipsis,
+//     BreadcrumbItem,
+//     BreadcrumbLink,
+//     BreadcrumbList,
+//     BreadcrumbPage,
+//     BreadcrumbSeparator,
+// } from "@/shadcn/components/ui/breadcrumb"
+// import {
+//     DropdownMenu,
+//     DropdownMenuContent,
+//     DropdownMenuItem,
+//     DropdownMenuTrigger,
+// } from "@/shadcn/components/ui/dropdown-menu"
 
-"use client";
-
-
- function Breadcrumb(props) {
-     console.log(props.children)
+export function BreadcrumbDemo() {
     return (
-        <nav className="bg-grey-light w-full rounded-md">
-            <ol className="list-reset flex">
-
-                {props.children?.map(C => (
-                    <>
-                        {C}
-                    <li>
-                    <span className="mx-2 text-neutral-400">{"<"}</span>
-                    </li>
-                    </>
-                )) }
-            </ol>
-        </nav>
-    );
+        <div>hi</div>
+        /*<Breadcrumb>
+            <BreadcrumbList>
+                <BreadcrumbItem>
+                    <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className="flex items-center gap-1">
+                            <BreadcrumbEllipsis className="h-4 w-4" />
+                            <span className="sr-only">Toggle menu</span>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start">
+                            <DropdownMenuItem>Documentation</DropdownMenuItem>
+                            <DropdownMenuItem>Themes</DropdownMenuItem>
+                            <DropdownMenuItem>GitHub</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                    <BreadcrumbLink href="/docs/components">Components</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                    <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+                </BreadcrumbItem>
+            </BreadcrumbList>
+        </Breadcrumb>*/
+    )
 }
-
- Breadcrumb.Item = function () {
-     return (
-    <li>
-        <p
-            className="text-primary transition duration-150 ease-in-out hover:text-primary-accent-300 focus:text-primary-accent-300 active:text-primary-accent-300 motion-reduce:transition-none dark:text-primary-400"
-        >Home</p
-        >
-    </li>
-     )
-}
-
-export default Breadcrumb
