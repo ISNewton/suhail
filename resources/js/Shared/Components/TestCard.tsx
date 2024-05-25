@@ -1,4 +1,5 @@
 import {FileIcon, InfoIcon} from "lucide-react";
+import Badge from "../Badge";
 
 export default () => {
     return (
@@ -10,31 +11,26 @@ export default () => {
             اختبار عملي حاسوب
         </h2>
         <p className="leading-7 ">تاريخ الانشاء: 1/1/2000 </p>
-        <div className="mt-4 flex  gap-2 ">
-            <div
-                className=" flex w-fit  justify-start items-center gap-1  bg-blue-100 text-blue-800 text-sm font-medium me-2 px-2.5 py-2 rounded dark:bg-blue-900 dark:text-blue-300">
+        <div className="mt-4 flex flex-wrap  gap-2 ">
+
+            <Badge type='primary'>
                 <InfoIcon size={17}/>
                 <span>
                 27  سؤال
                 </span>
-
-            </div>
-            <div
-                className=" flex  w-fit justify-start items-center gap-1  bg-yellow-100 text-yellow-800 text-sm font-medium me-2 px-2.5 py-2 rounded dark:bg-blue-900 dark:text-blue-300">
+            </Badge>
+            <Badge type='success'>
                 <InfoIcon size={17}/>
                 <span>
                 27  سؤال
                 </span>
-
-            </div>
-            <div
-                className=" flex w-fit justify-start items-center gap-1  bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-2 rounded dark:bg-blue-900 dark:text-blue-300">
+            </Badge>
+            <Badge type='info'>
                 <InfoIcon size={17}/>
                 <span>
                 27  سؤال
                 </span>
-
-            </div>
+            </Badge>
         </div>
     </div>
 

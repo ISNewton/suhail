@@ -8,7 +8,7 @@ import {
     BreadcrumbSeparator,
 } from "@/Components/ui/breadcrumb"
 import {Link} from "@inertiajs/react";
-import {FileIcon, HomeIcon, InfoIcon} from "lucide-react";
+import {FileIcon, HomeIcon, PenIcon} from "lucide-react";
 import DashboardMenu from "../../Shared/Components/DashboardMenu";
 import LargeTitle from "../../Shared/LargeTitle";
 import TestCard from "../../Shared/Components/TestCard";
@@ -29,6 +29,16 @@ export default () => {
                                 </span>
                             </Link>
                         </BreadcrumbLink>
+                        <BreadcrumbLink >
+                            <Link as={'div'} className=" flex gap-3 items-bottom justify-between" to="/dashboard">
+                                <span>
+                                <PenIcon size={'18'}/>
+                                </span>
+                                <span>
+                                اختبار جديد
+                                </span>
+                            </Link>
+                        </BreadcrumbLink>
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
@@ -39,18 +49,11 @@ export default () => {
                <DashboardMenu />
 
                 <div className="my-8">
-                    <div className="grid gap-4  grid-cols-1 md:grid-cols-3  xl:grid-cols-4">
-                        <TestCard/>
-                        <TestCard/>
-                        <TestCard/>
-                        <TestCard/>
-                        <div
-                            className="rounded-lg hover:bg-gray-100 cursor-pointer border bg-card text-card-foreground shadow-sm p-6  ">
-                            <div className="text-center min-h-20 flex items-center justify-center leading-9 text-xl">
-                                +
-                                اختبار جديد
-                            </div>
-                        </div>
+                    <div className="grid gap-4 grid-cols-4">
+                        <TestCard />
+                        <TestCard />
+                        <TestCard />
+                        <TestCard />
 
                     </div>
                 </div>
