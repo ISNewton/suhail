@@ -112,6 +112,40 @@ export default function (props) {
 
     }
 
+    function addEmptyOption() {
+        if(activeQuestion.options.length > 4) {
+            alert("You can't ")
+            return
+        }
+
+        setQuestions(q => {
+            return q.map(question => {
+                if(question.id == activeQuestion.id) {
+                   question.options.push({
+                       id:Math.random(),
+                       title:'أزرق',
+                       isCorrect:false,
+                   })
+                }
+                return question
+
+            })
+        })
+    }
+
+    function removeOption(optionId:number) {
+
+        setQuestions(q => {
+            return q.map(question => {
+                if(question.id == activeQuestion.id) {
+                    question.options = question.options.filter(o => o.id != optionId)
+                }
+                return question
+
+            })
+        })
+    }
+
 
     return (
         <>
@@ -134,8 +168,26 @@ export default function (props) {
                 </Badge>
             </div>
             {activeQuestion && (
-                <QuestionItem handleOptionsChange={handleOptionsChange} handleQuestionTitleChange={handleQuestionChange} question={activeQuestion} />
+                <QuestionItem removeOption={removeOption} handleOptionsChange={handleOptionsChange} handleQuestionTitleChange={handleQuestionChange} question={activeQuestion} />
             )}
+            <div>
+
+                {activeQuestion.options.length <=4 && (
+                    <p onClick={addEmptyOption}
+                       className="flex items-center hover:bg-gray-200 w-fit p-2 rounded-lg cursor-pointer">
+
+                    <span>
+                    <PlusIcon/>
+                    </span>
+                        <span>
+                    اختيار جديد
+                    </span>
+
+                    </p>
+                )}
+
+
+            </div>
         </>
     )
 }

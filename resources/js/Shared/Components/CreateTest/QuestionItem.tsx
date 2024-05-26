@@ -1,5 +1,5 @@
 import CustomTextInput from "../../CustomTextInput";
-import {InfoIcon} from "lucide-react";
+import {InfoIcon, MinusIcon} from "lucide-react";
 import {Label} from "../../../Components/ui/label";
 import {useState} from 'react'
 
@@ -20,8 +20,9 @@ interface Props {
     question: QuestionType,
     handleQuestionTitleChange :  (value : string) => void,
     handleOptionsChange : (optionId :number ,option:QuestionOptionType ) => void
+    removeOption: (optionId:number) => void
 }
-export default function ({question , handleQuestionTitleChange , handleOptionsChange , ...props} : Props) {
+export default function ({question , handleQuestionTitleChange , handleOptionsChange , removeOption , ...props} : Props) {
 
     return (
         <>
@@ -75,6 +76,14 @@ export default function ({question , handleQuestionTitleChange , handleOptionsCh
                                         })}
                                     />
                                 </label>
+                                {question.options.length > 2 && (
+                                    <span onClick={() => removeOption(option.id)}
+                                          className=" hover:bg-gray-200 w-fit mr-2 rounded-lg cursor-pointer">
+
+                                    <MinusIcon/>
+                                </span>
+                                )}
+
                             </div>
                         ))}
 
