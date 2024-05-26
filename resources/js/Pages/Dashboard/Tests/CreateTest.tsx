@@ -1,4 +1,5 @@
 
+import {useState} from 'react'
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -8,11 +9,30 @@ import {
     BreadcrumbSeparator,
 } from "@/Components/ui/breadcrumb"
 import {Link} from "@inertiajs/react";
-import {FileIcon, HomeIcon, PenIcon} from "lucide-react";
-import DashboardMenu from "../../Shared/Components/DashboardMenu";
-import LargeTitle from "../../Shared/LargeTitle";
-import TestCard from "../../Shared/Components/TestCard";
+import {FileIcon, HomeIcon, InfoIcon, PenIcon} from "lucide-react";
+import DashboardMenu from "../../../Shared/Components/DashboardMenu";
+import LargeTitle from "../../../Shared/LargeTitle";
+import TestCard from "../../../Shared/Components/TestCard";
+import CustomTextInput from "../../../Shared/CustomTextInput";
+import SmallTitle from "../../../Shared/SmallTitle";
+import {Label} from "../../../Components/ui/label";
+import PrimaryButton from "../../../Shared/PrimaryButton";
+import TestInfoStep from "../../../Shared/Components/CreateTest/TestInfoStep";
+import QuestionsStep from "../../../Shared/Components/CreateTest/QuestionsStep";
 export default () => {
+
+    const [step , setStep] = useState<'info'| 'questions'>('info')
+
+    function handleNextStep() {
+        if(step == 'info') {
+            setStep('questions')
+        }
+        else {
+            setStep('info')
+        }
+
+    }
+
 
     return (
         <div>
@@ -29,6 +49,8 @@ export default () => {
                                 </span>
                             </Link>
                         </BreadcrumbLink>
+
+                        <BreadcrumbSeparator />
                         <BreadcrumbLink >
                             <Link as={'div'} className=" flex gap-3 items-bottom justify-between" to="/dashboard">
                                 <span>
@@ -44,17 +66,15 @@ export default () => {
             </Breadcrumb>
 
             <div className="my-12 pr-4">
-                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">لوحة التحكم</h1>
+                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">اختبار جديد</h1>
 
-               <DashboardMenu />
+                <div className="my-8 border rounded-lg p-12">
 
-                <div className="my-8">
-                    <div className="grid gap-4 grid-cols-4">
-                        <TestCard />
-                        <TestCard />
-                        <TestCard />
-                        <TestCard />
+                    {step == 'info' && <TestInfoStep />}
+                    {step == 'questions' && <QuestionsStep />}
 
+                    <div className="flex justify-end items-end">
+                        <PrimaryButton onClick={handleNextStep} className="my-2 text-end">التالي</PrimaryButton>
                     </div>
                 </div>
 

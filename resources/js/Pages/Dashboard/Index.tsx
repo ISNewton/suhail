@@ -46,10 +46,10 @@ export default () => {
                         <TestCard/>
                         <div
                             className="rounded-lg hover:bg-gray-100 cursor-pointer border bg-card text-card-foreground shadow-sm p-6  ">
-                            <div className="text-center min-h-20 flex items-center justify-center leading-9 text-xl">
+                            <Link href="/dashboard/tests/create" className="text-center min-h-20 flex items-center justify-center leading-9 text-xl">
                                 +
                                 اختبار جديد
-                            </div>
+                            </Link>
                         </div>
 
                     </div>
