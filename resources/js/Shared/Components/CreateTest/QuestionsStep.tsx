@@ -1,9 +1,8 @@
-import CustomTextInput from "../../CustomTextInput";
-import {InfoIcon, PlusIcon} from "lucide-react";
-import {Label} from "../../../Components/ui/label";
+import {PlusIcon} from "lucide-react";
 import {useState} from 'react'
 import QuestionItem from "./QuestionItem";
 import Badge from "../../Badge";
+import {z, ZodError, ZodIssue, ZodParsedType} from "zod";
 
 
 interface QuestionType {
@@ -49,12 +48,72 @@ export default function (props) {
         }
 
 
+
     const [questions , setQuestions] = useState<QuestionType[]>([
         defaultQuestion
     ])
 
+    const [titleError , setTitleError ] = useState<string>('')
+
+    const [optionsError , setOptionsError ] = useState<{id:number , message:string}[]>([])
+
     const [activeQuestion , setActiveQuestion] = useState<QuestionType>(questions[0])
 
+    const questionTitleValidationSchema = z
+        .string()
+        .min(6 , 'يجب أن لا يقل عنوان السؤال عن ستة أحرف')
+
+    const questionOptionValidationSchema = z.object({
+            id:z.any(),
+            title:z.string().min(6 , 'يجب أن لا يقل عنوان السؤال عن ستة أحرف'),
+            isCorrect:z.boolean()
+        })
+
+
+    function parseQuestionTitleValidation() {
+        setTitleError('')
+        try {
+            const validationError =  questionTitleValidationSchema.parse(activeQuestion.title)
+        }
+        catch (e :ZodError) {
+
+            setTitleError(e.errors[0].message)
+            // setTitleError(e?.message)
+        }
+
+    }
+
+    function parseQuestionOptionsValidation(optionId:number , value) {
+        const previousError = optionsError.find(o => o.id == optionId)?.message
+        try {
+            const validationError =  questionOptionValidationSchema.parse(activeQuestion.options.find(o => o.id == optionId))
+
+            if(previousError) {
+                console.log(2323)
+
+                setOptionsError(prevErros => {
+                    return prevErros.filter(o => o.id != optionId)
+                    }
+                )
+            }
+        }
+        catch (e :ZodError) {
+
+            console.log(e.errors[0].message)
+            setOptionsError(prevErros => {
+               return [
+                ...prevErros,
+                {
+                    id: optionId,
+                    message: e.errors[0].message
+                }
+            ]
+            }
+            )
+            // setTitleError(e?.message)
+        }
+
+    }
     function addEmptyQuestion() {
         setQuestions(q => {
             return [
@@ -168,7 +227,12 @@ export default function (props) {
                 </Badge>
             </div>
             {activeQuestion && (
-                <QuestionItem removeOption={removeOption} handleOptionsChange={handleOptionsChange} handleQuestionTitleChange={handleQuestionChange} question={activeQuestion} />
+                <QuestionItem
+                    titleError={titleError}
+                    optionsError={optionsError}
+                    validateTitle={parseQuestionTitleValidation}
+                    validateOptions={parseQuestionOptionsValidation}
+                    removeOption={removeOption} handleOptionsChange={handleOptionsChange} handleQuestionTitleChange={handleQuestionChange} question={activeQuestion} />
             )}
             <div>
 

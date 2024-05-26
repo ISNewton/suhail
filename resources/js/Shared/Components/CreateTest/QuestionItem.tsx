@@ -21,8 +21,17 @@ interface Props {
     handleQuestionTitleChange :  (value : string) => void,
     handleOptionsChange : (optionId :number ,option:QuestionOptionType ) => void
     removeOption: (optionId:number) => void
+    validateTitle:(title:string) => void
+    validateOptions:(optionId:number , value:string) => void
+    titleError:string
+    optionsError:{id:number , message:string}[]
 }
-export default function ({question , handleQuestionTitleChange , handleOptionsChange , removeOption , ...props} : Props) {
+export default function ({question , handleQuestionTitleChange , handleOptionsChange , removeOption , validateTitle , titleError,
+    optionsError,
+    validateOptions,
+                             ...props} : Props) {
+
+    console.log(optionsError)
 
     return (
         <>
@@ -36,7 +45,9 @@ export default function ({question , handleQuestionTitleChange , handleOptionsCh
                     type="text"
                     placeholder='كيف تأكل الأسماك الماء'
                     value={question.title}
+                    errors={titleError}
                     onChange={(e) => handleQuestionTitleChange(e.target.value)}
+                    onBlur={e => validateTitle(e.target.value)}
                     hint={<div className="mr-2 mt-1 flex flex-start items-center gap-1 text-green-800">
                         <span><InfoIcon size={15}/></span>
                         <span>اختر عنوانا مناسبا للسؤال</span>
@@ -46,7 +57,12 @@ export default function ({question , handleQuestionTitleChange , handleOptionsCh
                 <div className="mt-8">
 
 
-                <h4>الاختيارات</h4>
+                <h4>الاختيارات
+                    {!question.options.find(o => o.isCorrect ) && (
+
+                        <small className='mr-2 text-red-500'>(يرجى تحديد الخيار الصحيح)</small>
+                    )}
+                </h4>
 
                     <div className="flex justify-start flex-col mt-4 gap-4 items-start">
 
@@ -69,11 +85,13 @@ export default function ({question , handleQuestionTitleChange , handleOptionsCh
                                         type="text"
                                         placeholder='كيف تأكل الأسماك الماء'
                                         value={option.title}
+                                        errors={optionsError.find(o => o.id == option.id)?.message ?? ''}
                                         onChange={e => handleOptionsChange(option.id , {
                                             ...option,
                                             title: e.target.value,
                                             isCorrect:option.isCorrect
                                         })}
+                                        onBlur={e => validateOptions(option.id , e.target.value)}
                                     />
                                 </label>
                                 {question.options.length > 2 && (

@@ -43,7 +43,7 @@ export default ({errors , size , labelClass , hint , label, required , ...props}
             {errors && (
                 <small className="text-red-500">{errors}</small>
             )}
-            {hint && (
+            {!errors && hint && (
                 <small className="text-gray-600">{hint}</small>
             )}
         </div>
