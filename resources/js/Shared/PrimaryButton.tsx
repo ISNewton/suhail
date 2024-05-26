@@ -14,7 +14,7 @@ export default ({href , className , ...props}:Props) => {
     return href ?  (
             <Link href={href}>
 
-                <Button className={`bg-[#7F56D9] hover:bg-[#7F56EE9] text-white font-bold ${className}`}
+                <Button className={`bg-primary   text-white font-bold ${className}`}
                             {...props}
                     >{props.children}</Button>
 
@@ -22,7 +22,7 @@ export default ({href , className , ...props}:Props) => {
             )
                 :
                 (
-                <Button className={cn('bg-[#7F56D9] hover:bg-[#7F56EE9] text-white font-bold' , className)}
+                <Button className={cn('bg-primary  text-white font-bold' , className)}
                         {...props}
                 >{props.children}</Button>
                 )

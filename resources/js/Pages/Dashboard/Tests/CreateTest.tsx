@@ -21,7 +21,7 @@ import TestInfoStep from "../../../Shared/Components/CreateTest/TestInfoStep";
 import QuestionsStep from "../../../Shared/Components/CreateTest/QuestionsStep";
 export default () => {
 
-    const [step , setStep] = useState<'info'| 'questions'>('info')
+    const [step , setStep] = useState<'info'| 'questions'>('questions')
 
     function handleNextStep() {
         if(step == 'info') {
@@ -31,6 +31,17 @@ export default () => {
             setStep('info')
         }
 
+    }
+
+    function getStepTitle() {
+        if(step == 'info') {
+            return 'اعدادات الاختبار'
+        }
+
+        if(step == 'questions') {
+            return 'أسئلة الاختبار'
+        }
+        return 'test'
     }
 
 
@@ -66,7 +77,10 @@ export default () => {
             </Breadcrumb>
 
             <div className="my-12 pr-4">
-                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">اختبار جديد</h1>
+                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                    <span>اختبار جديد  - </span>
+                    <span>{getStepTitle()}</span>
+                </h1>
 
                 <div className="my-8 border rounded-lg p-12">
 
