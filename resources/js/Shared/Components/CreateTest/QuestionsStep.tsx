@@ -1,8 +1,9 @@
-import {PlusIcon} from "lucide-react";
+import {CrossIcon, PlusIcon, TimerIcon, XIcon} from "lucide-react";
 import {useState} from 'react'
 import QuestionItem from "./QuestionItem";
 import Badge from "../../Badge";
 import {z, ZodError, ZodIssue, ZodParsedType} from "zod";
+import PrimaryButton from "../../PrimaryButton";
 
 
 interface QuestionType {
@@ -57,7 +58,7 @@ export default function (props) {
 
     const [optionsError , setOptionsError ] = useState<{id:number , message:string}[]>([])
 
-    const [activeQuestion , setActiveQuestion] = useState<QuestionType>(questions[0])
+    const [activeQuestion , setActiveQuestion] = useState<QuestionType | null>(questions[0])
 
     const questionTitleValidationSchema = z
         .string()
@@ -72,12 +73,17 @@ export default function (props) {
 
     function parseQuestionTitleValidation() {
         setTitleError('')
+        if(!activeQuestion) {
+            return true
+        }
         try {
             const validationError =  questionTitleValidationSchema.parse(activeQuestion.title)
+            return true
         }
         catch (e :ZodError) {
 
             setTitleError(e.errors[0].message)
+            return false
             // setTitleError(e?.message)
         }
 
@@ -85,6 +91,10 @@ export default function (props) {
 
     function parseQuestionOptionsValidation(optionId:number , value) {
         const previousError = optionsError.find(o => o.id == optionId)?.message
+        if(activeQuestion == null) {
+            return
+        }
+
         try {
             const validationError =  questionOptionValidationSchema.parse(activeQuestion.options.find(o => o.id == optionId))
 
@@ -95,6 +105,7 @@ export default function (props) {
                     return prevErros.filter(o => o.id != optionId)
                     }
                 )
+                return true
             }
         }
         catch (e :ZodError) {
@@ -110,11 +121,24 @@ export default function (props) {
             ]
             }
             )
+            return false
             // setTitleError(e?.message)
         }
+    }
+
+    function changeActiveQuestion(questionId) {
+        // const titleValidation = parseQuestionTitleValidation()
+        setActiveQuestion(questions.find(q => q.id == questionId))
 
     }
+
     function addEmptyQuestion() {
+        const titleValidation = parseQuestionTitleValidation()
+
+        if(!titleValidation ) {
+            return
+        }
+
         setQuestions(q => {
             return [
                 ...q,
@@ -138,7 +162,7 @@ export default function (props) {
         setQuestions(q => {
 
             return q.map(question => {
-                if(question.id == activeQuestion.id) {
+                if(question.id == activeQuestion?.id) {
                     question.title = value
                 }
                 return question
@@ -152,7 +176,7 @@ export default function (props) {
         setQuestions(q => {
 
             return q.map(question => {
-                if(question.id == activeQuestion.id) {
+                if(question.id == activeQuestion?.id) {
                     question.options = question.options.map(option => {
                         if(option.id == optionId) {
                             return  {
@@ -172,14 +196,14 @@ export default function (props) {
     }
 
     function addEmptyOption() {
-        if(activeQuestion.options.length > 4) {
+        if(activeQuestion?.options.length > 4) {
             alert("You can't ")
             return
         }
 
         setQuestions(q => {
             return q.map(question => {
-                if(question.id == activeQuestion.id) {
+                if(question.id == activeQuestion?.id) {
                    question.options.push({
                        id:Math.random(),
                        title:'أزرق',
@@ -196,7 +220,7 @@ export default function (props) {
 
         setQuestions(q => {
             return q.map(question => {
-                if(question.id == activeQuestion.id) {
+                if(question.id == activeQuestion?.id) {
                     question.options = question.options.filter(o => o.id != optionId)
                 }
                 return question
@@ -205,6 +229,17 @@ export default function (props) {
         })
     }
 
+    function removeQuestion(id) {
+        setQuestions(q => {
+            return q.filter(question => question.id != id)
+            }
+        )
+        if(activeQuestion?.id == id) {
+            setActiveQuestion(null)
+        }
+    }
+
+
 
     return (
         <>
@@ -212,20 +247,31 @@ export default function (props) {
             <div className="flex gap-1 flex-wrap">
                 {questions.map(q =>(
                     <Badge
-                        onClick={() => setActiveQuestion(q)}
                         key={q.id}
-                        className={`font-bold bg-white  ${q.id == activeQuestion.id ? 'bg-primary text-white' : 'border border-primary text-primary'} cursor-pointer`}>{q.title}</Badge>
+                        className={`font-bold bg-white  ${q.id == activeQuestion?.id ? 'bg-primary text-white' : 'border border-primary text-primary'} `}
+                    >
+                        <span
+                            onClick={() => changeActiveQuestion(q.id)}
 
-                ) )}
-                <Badge onClick={addEmptyQuestion} className="font-bold cursor-pointer">
+                            className="cursor-pointer">
+                         {q.title}
+                        </span>
+                        <span onClick={() => removeQuestion(q.id)} className={'cursor-pointer   mr-4'}><XIcon/></span>
+                    </Badge>
+
+                ))}
+                <PrimaryButton disabled={!!titleError || !!optionsError.filter(o => !!o.message)} onClick={addEmptyQuestion} className="font-bold cursor-pointer">
                     <span>
                     <PlusIcon/>
                     </span>
                     <span>
                     أضف سؤال
                     </span>
-                </Badge>
+                </PrimaryButton>
             </div>
+            {activeQuestion && (
+
+            <div>
             {activeQuestion && (
                 <QuestionItem
                     titleError={titleError}
@@ -252,6 +298,9 @@ export default function (props) {
 
 
             </div>
+
+            </div>
+            )}
         </>
     )
 }
