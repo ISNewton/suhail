@@ -18,7 +18,7 @@ interface QuestionOptionType {
     isCorrect: boolean
 }
 
-export default function (props) {
+export default function (props: any) {
 
     const defaultQuestion = {
         title: 'ما لون السمك في الماء',
@@ -71,16 +71,84 @@ export default function (props) {
     })
 
 
-    function changeActiveQuestion(questionId) {
+    function changeActiveQuestion(questionId: number) {
         // const titleValidation = parseQuestionTitleValidation()
-        setActiveQuestion(questions.find(q => q.id == questionId))
+        const question = questions.find(q => q.id == questionId)
+        if (question) {
+
+            setActiveQuestion(question)
+        }
 
     }
 
-    function addEmptyQuestion() {
-        const titleValidation = parseQuestionTitleValidation()
+    function validateTitle(): boolean {
+        if (activeQuestion == null) {
+            return false
 
-        if (!titleValidation) {
+        }
+        const schema = z.string().min(6)
+        const validation = schema.safeParse(activeQuestion.title)
+
+        if (validation.success) {
+            return true
+        } else {
+            const message = JSON.parse(validation.error.message)[0].message
+            setTitleError(message)
+            return false
+
+        }
+
+    }
+
+
+    function validateOptions(): boolean {
+        if (activeQuestion == null) {
+            return false
+
+        }
+        const schema = z.array(z.object({
+            title: z.string().min(4)
+        }))
+
+        const validation = schema.safeParse(activeQuestion.options)
+
+        if (validation.success) {
+            return true
+        } else {
+
+            const zodErrors = JSON.parse(validation.error.message)
+
+            const errors: { id: number; message: any; }[] = []
+
+            zodErrors.map((e: { path: (string | number)[]; message: any; }) => {
+                errors.push({
+                    id: activeQuestion.options[e.path[0]].id,
+                    message: e.message
+                })
+
+            })
+
+
+            setOptionsError(errors)
+            return false
+
+        }
+
+    }
+
+
+    function addEmptyQuestion() {
+
+
+        const isTitleValid = validateTitle()
+        if (!isTitleValid) {
+            return
+        }
+
+
+        const isOptionsValid = validateOptions()
+        if (!isOptionsValid) {
+            console.log('not valid')
             return
         }
 
@@ -103,7 +171,7 @@ export default function (props) {
 
     }
 
-    function handleQuestionChange(value) {
+    function handleQuestionChange(value: string) {
         setQuestions(q => {
 
             return q.map(question => {
@@ -151,11 +219,9 @@ export default function (props) {
 
     }
 
+
     function addEmptyOption() {
-        if (activeQuestion?.options.length > 4) {
-            alert("You can't ")
-            return
-        }
+
 
         setQuestions(q => {
             return q.map(question => {
@@ -185,7 +251,7 @@ export default function (props) {
         })
     }
 
-    function removeQuestion(id) {
+    function removeQuestion(id: number) {
         setQuestions(q => {
                 return q.filter(question => question.id != id)
             }
@@ -203,7 +269,8 @@ export default function (props) {
                 {questions.map(q => (
                     <Badge
                         key={q.id}
-                        className={`font-bold bg-white  ${q.id == activeQuestion?.id ? 'bg-primary text-white' : 'border border-primary text-primary'} `}
+                        className={`font-bold bg-white
+                        ${q.id == activeQuestion?.id ? 'bg-primary text-white' : 'border border-primary text-primary'} `}
                     >
                         <span
                             onClick={() => changeActiveQuestion(q.id)}
@@ -215,8 +282,8 @@ export default function (props) {
                     </Badge>
 
                 ))}
-                <PrimaryButton disabled={!!titleError || !!optionsError.filter(o => !!o.message)}
-                               onClick={addEmptyQuestion} className="font-bold cursor-pointer">
+                <PrimaryButton
+                    onClick={addEmptyQuestion} className="font-bold cursor-pointer">
                     <span>
                     <PlusIcon/>
                     </span>
