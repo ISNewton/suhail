@@ -1,9 +1,12 @@
 import {CrossIcon, PlusIcon, TimerIcon, XIcon} from "lucide-react";
-import {useState} from 'react'
+import React, {useState} from 'react'
 import QuestionItem from "./QuestionItem";
 import Badge from "../../Badge";
 import {z, ZodError, ZodIssue, ZodParsedType} from "zod";
 import PrimaryButton from "../../PrimaryButton";
+import {Label} from "flowbite-react";
+import Select from "react-select";
+import CreatableSelect from 'react-select/creatable';
 
 
 interface QuestionType {
@@ -280,65 +283,21 @@ export default function (props: any) {
 
     return (
         <>
-            {/*{questionsCount.forEach(count => <QuestionItem />)}*/}
-            <div className="flex gap-1 flex-wrap">
-                {questions.map(q => (
-                    <Badge
-                        key={q.id}
-                        className={`font-bold bg-white
-                        ${q.id == activeQuestion?.id ? 'bg-primary text-white' : 'border border-primary text-primary'} `}
-                    >
-                        <span
-                            onClick={() => changeActiveQuestion(q.id)}
+            <div className="mb-2 block">
+                <h3 className={"h"}>
+                    أدعوا طلابك للمشاركة في الاختبار
+                </h3>
+                <CreatableSelect
 
-                            className="cursor-pointer">
-                         {q.title}
-                        </span>
-                        <span onClick={() => removeQuestion(q.id)} className={'cursor-pointer   mr-4'}><XIcon/></span>
-                    </Badge>
+                    hideSelectedOptions={true}
+                    formatCreateLabel={title => <div>دعوة {title}</div>}
+                    // menuIsOpen={false}
+                    isMulti={true}
+                    options={[]}
 
-                ))}
-                <PrimaryButton
-                    onClick={addEmptyQuestion} className="font-bold cursor-pointer">
-                    <span>
-                    <PlusIcon/>
-                    </span>
-                    <span>
-                    أضف سؤال
-                    </span>
-                </PrimaryButton>
+                />
             </div>
-            {activeQuestion && (
 
-                <div>
-                    {activeQuestion && (
-                        <QuestionItem
-                            titleError={titleError}
-                            optionsError={optionsError}
-                            removeOption={removeOption} handleOptionsChange={handleOptionsChange}
-                            handleQuestionTitleChange={handleQuestionChange} question={activeQuestion}/>
-                    )}
-                    <div>
-
-                        {activeQuestion.options.length <= 4 && (
-                            <p onClick={addEmptyOption}
-                               className="flex items-center hover:bg-gray-200 w-fit p-2 rounded-lg cursor-pointer">
-
-                    <span>
-                    <PlusIcon/>
-                    </span>
-                                <span>
-                    اختيار جديد
-                    </span>
-
-                            </p>
-                        )}
-
-
-                    </div>
-
-                </div>
-            )}
         </>
     )
 }

@@ -1,4 +1,3 @@
-
 import {useState} from 'react'
 import {
     Breadcrumb,
@@ -19,27 +18,39 @@ import {Label} from "../../../Components/ui/label";
 import PrimaryButton from "../../../Shared/PrimaryButton";
 import TestInfoStep from "../../../Shared/Components/CreateTest/TestInfoStep";
 import QuestionsStep from "../../../Shared/Components/CreateTest/QuestionsStep";
+import InviteStep from "../../../Shared/Components/CreateTest/InviteStep";
+
 export default () => {
 
-    const [step , setStep] = useState<'info'| 'questions'>('questions')
+    const [step, setStep] = useState<'info' | 'questions' | 'invite'>('invite')
 
     function handleNextStep() {
-        if(step == 'info') {
+        if (step == 'info') {
             setStep('questions')
         }
-        else {
+
+        if (step == 'questions') {
+            setStep('invite')
+        }
+
+
+        if (step == 'invite') {
             setStep('info')
         }
 
     }
 
     function getStepTitle() {
-        if(step == 'info') {
+        if (step == 'info') {
             return 'اعدادات الاختبار'
         }
 
-        if(step == 'questions') {
+        if (step == 'questions') {
             return 'أسئلة الاختبار'
+        }
+
+        if (step == 'invite') {
+            return 'دعوة الطلاب'
         }
         return 'test'
     }
@@ -47,10 +58,10 @@ export default () => {
 
     return (
         <div>
-            <Breadcrumb className="inline-block border p-2 rounded-lg  " >
-                <BreadcrumbList >
+            <Breadcrumb className="inline-block border p-2 rounded-lg  ">
+                <BreadcrumbList>
                     <BreadcrumbItem>
-                        <BreadcrumbLink >
+                        <BreadcrumbLink>
                             <Link as={'div'} className=" flex gap-3 items-bottom justify-between" to="/dashboard">
                                 <span>
                                 <HomeIcon size={'18'}/>
@@ -61,8 +72,8 @@ export default () => {
                             </Link>
                         </BreadcrumbLink>
 
-                        <BreadcrumbSeparator />
-                        <BreadcrumbLink >
+                        <BreadcrumbSeparator/>
+                        <BreadcrumbLink>
                             <Link as={'div'} className=" flex gap-3 items-bottom justify-between" to="/dashboard">
                                 <span>
                                 <PenIcon size={'18'}/>
@@ -84,8 +95,9 @@ export default () => {
 
                 <div className="my-8 border rounded-lg p-12">
 
-                    {step == 'info' && <TestInfoStep />}
-                    {step == 'questions' && <QuestionsStep />}
+                    {step == 'info' && <TestInfoStep/>}
+                    {step == 'questions' && <QuestionsStep/>}
+                    {step == 'invite' && <InviteStep/>}
 
                     <div className="flex justify-end items-end">
                         <PrimaryButton onClick={handleNextStep} className="my-2 text-end">التالي</PrimaryButton>
