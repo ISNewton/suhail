@@ -4,9 +4,18 @@ import {Label} from "../../../Components/ui/label";
 import {useState} from 'react'
 
 
-export default function (props) {
+type TestData = {
+    title: string
+    type: "public" | 'private'
+}
 
-    const [testType , setTestType] = useState('global')
+interface Props {
+    testData: TestData
+    setTestData: (value: TestData) => TestData
+}
+
+export default function ({testData, setTestData}: Props) {
+
 
     return (
         <>
@@ -15,12 +24,18 @@ export default function (props) {
                 <CustomTextInput
                     size={'large'}
                     required
-                    label="الاسم بالكامل"
+                    label="عنوان الاختبار"
                     id="full_name"
                     type="text"
                     // errors={errors.full_name}
-                    value={'hi'}
-                    onChange={(e) => setData('full_name', e.target.value)}
+                    value={testData.title}
+                    onChange={(e) => setTestData((values) => {
+                            return {
+                                ...values,
+                                title: e.target.value
+                            }
+                        }
+                    )}
                     hint={<div className="mr-2 mt-1 flex flex-start items-center gap-1 text-green-800">
                         <span><InfoIcon size={15}/></span>
                         <span>اختر عنوانا مناسبا لاختبارك</span>
@@ -34,8 +49,8 @@ export default function (props) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 
                     <div
-                        onClick={() => setTestType('public')}
-                        className={`rounded-lg ${testType == 'public' ? 'bg-gray-100' : 'bg-white'} cursor-pointer border
+                        onClick={() => setTestData(v => ({...v, type: 'public'}))}
+                        className={`rounded-lg ${testData.type == 'public' ? 'bg-gray-100' : 'bg-white'} cursor-pointer border
                             hover:bg-gray-100
                             text-card-foreground shadow-sm p-6`}>
 
@@ -47,8 +62,8 @@ export default function (props) {
 
                     </div>
                     <div
-                        onClick={() => setTestType('private')}
-                        className={`rounded-lg ${testType == 'private' ? 'bg-gray-100' : 'bg-white'}
+                        onClick={() => setTestData(v => ({...v, type: 'private'}))}
+                        className={`rounded-lg ${testData.type == 'private' ? 'bg-gray-100' : 'bg-white'}
                             hover:bg-gray-100
                               cursor-pointer border  text-card-foreground shadow-sm p-6`}>
                         <h3>اختبار خاص</h3>

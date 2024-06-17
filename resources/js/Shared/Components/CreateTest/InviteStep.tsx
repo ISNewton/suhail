@@ -15,7 +15,12 @@ interface Option {
     readonly value: string;
 }
 
-export default function () {
+interface Props {
+    setNextButtonDisabled: Function
+
+}
+
+export default function (props: Props) {
 
     const [emails, setEmails] = useState<string[]>([])
     const [emailValidationMessage, setEmailValidationMessage] = useState<string>("")
@@ -43,6 +48,7 @@ export default function () {
         if (errors.success) {
             if (emailValidationMessage) {
                 setEmailValidationMessage("")
+                props.setNextButtonDisabled(false)
             }
             return true
         }
@@ -50,6 +56,8 @@ export default function () {
         const message = JSON.parse(errors.error.message)[0].message
 
         setEmailValidationMessage(message)
+
+        props.setNextButtonDisabled(true)
     }
 
     const handleKeyDown: KeyboardEventHandler = (event) => {
@@ -76,7 +84,6 @@ export default function () {
                         DropdownIndicator: null
                     }}
                     inputValue={inputValue}
-                    // isClearable
                     isMulti
                     isClearable={true}
                     escapeClearsValue={true}

@@ -22,7 +22,17 @@ import InviteStep from "../../../Shared/Components/CreateTest/InviteStep";
 
 export default () => {
 
-    const [step, setStep] = useState<'info' | 'questions' | 'invite'>('invite')
+    const [step, setStep] = useState<'info' | 'questions' | 'invite'>('info')
+
+    const [isNextDisabled, setIsNextDisabled] = useState<boolean>(false)
+
+    const [testInfoData, setTestInfoData] = useState<{
+        title: string
+        type: 'public' | 'private'
+    }>({
+        title: '',
+        type: 'public',
+    })
 
     function handleNextStep() {
         if (step == 'info') {
@@ -36,6 +46,25 @@ export default () => {
 
         if (step == 'invite') {
             setStep('info')
+        }
+
+    }
+
+
+    function handelPreviousStep() {
+
+        if (step == 'info') {
+            return
+        }
+
+
+        if (step == 'questions') {
+            setStep('info')
+        }
+
+
+        if (step == 'invite') {
+            setStep('questions')
         }
 
     }
@@ -95,12 +124,22 @@ export default () => {
 
                 <div className="my-8 border rounded-lg p-12">
 
-                    {step == 'info' && <TestInfoStep/>}
-                    {step == 'questions' && <QuestionsStep/>}
-                    {step == 'invite' && <InviteStep/>}
+                    {step == 'info' &&
+                        <TestInfoStep testData={testInfoData} setTestData={setTestInfoData} key={"info"}/>}
+                    {step == 'questions' && <QuestionsStep key={"questions"}/>}
+                    {step == 'invite' && <InviteStep key={"questions"} setNextButtonDisabled={setIsNextDisabled}/>}
 
-                    <div className="flex justify-end items-end">
-                        <PrimaryButton onClick={handleNextStep} className="my-2 text-end">التالي</PrimaryButton>
+                    <div className="flex flex-row-reverse  justify-between items-end">
+                        <PrimaryButton disabled={isNextDisabled} onClick={handleNextStep}
+                                       className="my-2 text-end">التالي</PrimaryButton>
+
+                        {step !== 'info' && (
+
+                            <PrimaryButton disabled={isNextDisabled} onClick={handelPreviousStep}
+                                           className="my-2 text-end">السابق</PrimaryButton>
+                        )}
+
+
                     </div>
                 </div>
 
