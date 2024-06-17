@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useRef, useState} from 'react'
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -61,6 +61,9 @@ export default () => {
         message: string
     }[]>([])
 
+
+    const questionStepRef = useRef()
+
     const [questions, setQuestions] = useState<QuestionType[]>([
         {
             title: 'ما لون السمك في الماء',
@@ -84,12 +87,19 @@ export default () => {
 
 
     function handleNextStep() {
+
+
         if (step == 'info') {
             setStep('questions')
         }
 
         if (step == 'questions') {
-            setStep('invite')
+            const isReadyToSubmit = questionStepRef.current.isReadyToSubmit()
+
+            if (isReadyToSubmit) {
+                setStep('invite')
+
+            }
         }
 
 
@@ -178,10 +188,10 @@ export default () => {
 
                     {step == 'questions' &&
                         <QuestionsStep
+                            ref={questionStepRef}
                             tooltipMessage={tooltipMessage}
                             setTooltipMessage={setTooltipMessage}
                             questions={questions} setQuestions={setQuestions} key={"questions"}/>}
-
                     {step == 'invite' &&
                         <InviteStep emails={studentsEmails} setEmails={setStudentsEmails} key={"questions"}
                                     setNextButtonDisabled={setIsNextDisabled}/>}
