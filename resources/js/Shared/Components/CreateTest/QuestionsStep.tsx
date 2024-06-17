@@ -1,9 +1,10 @@
-import {CrossIcon, PlusIcon, TimerIcon, XIcon} from "lucide-react";
+import {ChevronDown, CrossIcon, PlusIcon, TimerIcon, XIcon} from "lucide-react";
 import {useState} from 'react'
 import QuestionItem from "./QuestionItem";
 import Badge from "../../Badge";
 import {z, ZodError, ZodIssue, ZodParsedType} from "zod";
 import PrimaryButton from "../../PrimaryButton";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipArrow} from "@/Components/ui/tooltip";
 
 
 interface QuestionType {
@@ -25,10 +26,13 @@ interface Props {
 
 export default function ({questions, setQuestions}: Props) {
 
+    // const [toolTipMessage, setToolTipMessage] = useState("")
 
-    // const [questions, setQuestions] = useState<QuestionType[]>([
-    //     defaultQuestion
-    // ])
+    const [tooltipMessage, setTooltipMessage] = useState<{
+        id: number
+        message: string
+    }[]>([])
+
 
     const [titleError, setTitleError] = useState<string>('')
 
@@ -47,19 +51,57 @@ export default function ({questions, setQuestions}: Props) {
     })
 
 
+    function clearActiveQuestionTooltipError() {
+        if (!activeQuestion) {
+            return
+        }
+        const activeQuestionHasTooltipError = tooltipMessage.find(t => t.id === activeQuestion.id)
+
+        if (activeQuestionHasTooltipError) {
+            setTooltipMessage(prev => {
+                return prev.filter(t => t.id !== activeQuestion.id)
+            })
+
+        }
+    }
+
+
     function changeActiveQuestion(questionId: number) {
         // const titleValidation = parseQuestionTitleValidation()
         const isTitleValid = validateTitle()
         if (!isTitleValid) {
+            setTooltipMessage(prev => {
+                return [
+                    ...prev,
+                    {
+                        id: activeQuestion?.id,
+                        message: "يحتوي هذا السؤال على خطأ"
+
+                    }
+                ]
+            })
             return
         }
 
 
         const isOptionsValid = validateOptions()
         if (!isOptionsValid) {
-            console.log('not valid')
+            setTooltipMessage(prev => {
+                return [
+                    ...prev,
+                    {
+                        id: activeQuestion?.id,
+                        message: "يحتوي هذا السؤال على خطأ"
+
+                    }
+                ]
+            })
             return
         }
+
+        const questionHasTooltipError = tooltipMessage.find(t => t.id === questionId)
+
+        clearActiveQuestionTooltipError()
 
         const question = questions.find(q => q.id == questionId)
         if (question) {
@@ -135,27 +177,43 @@ export default function ({questions, setQuestions}: Props) {
     }
 
 
-    function validateQuestionsTitles(): boolean {
-        return true
-
-    }
-
-
     function addEmptyQuestion() {
 
 
-        const isTitleValid = validateTitle()
-        if (!isTitleValid) {
-            return
+        if (activeQuestion) {
+
+            const isTitleValid = validateTitle()
+            if (!isTitleValid) {
+                setTooltipMessage(prev => {
+                    return [
+                        ...prev,
+                        {
+                            id: activeQuestion?.id,
+                            message: "يحتوي هذا السؤال على خطأ"
+
+                        }
+                    ]
+                })
+                return
+            }
+
+
+            const isOptionsValid = validateOptions()
+            if (!isOptionsValid) {
+                setTooltipMessage(prev => {
+                    return [
+                        ...prev,
+                        {
+                            id: activeQuestion?.id,
+                            message: "يحتوي هذا السؤال على خطأ"
+
+                        }
+                    ]
+                })
+                return
+            }
+
         }
-
-
-        const isOptionsValid = validateOptions()
-        if (!isOptionsValid) {
-            console.log('not valid')
-            return
-        }
-
 
         const newQuestion =
             {
@@ -278,19 +336,35 @@ export default function ({questions, setQuestions}: Props) {
             {/*{questionsCount.forEach(count => <QuestionItem />)}*/}
             <div className="flex gap-1 flex-wrap">
                 {questions.map(q => (
-                    <Badge
-                        key={q.id}
-                        className={`font-bold bg-white
+
+                    <TooltipProvider className={"border border-red-500"}>
+                        <Tooltip open={!!tooltipMessage.find(m => m.id === q.id)} className={"border border-red-500"}>
+                            <TooltipTrigger>
+                                <Badge
+                                    key={q.id}
+                                    className={`font-bold bg-white
                         ${q.id == activeQuestion?.id ? 'bg-primary text-white' : 'border border-primary text-primary'} `}
-                    >
+                                >
                         <span
                             onClick={() => changeActiveQuestion(q.id)}
 
                             className="cursor-pointer">
                          {q.title}
                         </span>
-                        <span onClick={() => removeQuestion(q.id)} className={'cursor-pointer   mr-4'}><XIcon/></span>
-                    </Badge>
+                                    <span onClick={() => removeQuestion(q.id)}
+                                          className={'cursor-pointer   mr-4'}><XIcon/></span>
+                                </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent sideOffset={5} className="bg-transparent border-none shadow-none">
+                                <p className={" p-1 rounded  text-red-500 font-bold border border-red-500"}>
+                                    {tooltipMessage.find(m => m.id === q.id)?.message}
+                                </p>
+                                <ChevronDown className="text-center mx-auto text-red-500"/>
+
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+
 
                 ))}
                 <PrimaryButton
@@ -311,6 +385,8 @@ export default function ({questions, setQuestions}: Props) {
                 <div>
                     {activeQuestion && (
                         <QuestionItem
+                            clearActiveQuestionTooltipError={clearActiveQuestionTooltipError}
+
                             titleError={titleError}
                             optionsError={optionsError}
                             removeOption={removeOption} handleOptionsChange={handleOptionsChange}

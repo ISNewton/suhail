@@ -23,6 +23,7 @@ interface Props {
     removeOption: (optionId: number) => void
     titleError: string
     optionsError: { id: number, message: string }[]
+    clearActiveQuestionTooltipError: () => void
 }
 
 export default function ({
@@ -32,6 +33,7 @@ export default function ({
                              removeOption,
                              titleError,
                              optionsError,
+                             clearActiveQuestionTooltipError,
                              ...props
                          }: Props) {
 
@@ -49,7 +51,11 @@ export default function ({
                     placeholder='كيف تأكل الأسماك الماء'
                     value={question.title}
                     errors={titleError}
-                    onChange={(e) => handleQuestionTitleChange(e.target.value)}
+                    onChange={(e) => {
+                        clearActiveQuestionTooltipError()
+                        handleQuestionTitleChange(e.target.value)
+                    }}
+
                     // onBlur={e => validateTitle(e.target.value)}
                     hint={<div className="mr-2 mt-1 flex flex-start items-center gap-1 text-green-800">
                         <span><InfoIcon size={15}/></span>
@@ -72,11 +78,16 @@ export default function ({
                         {question.options.map(option => (
                             <div key={option.id} className="flex items-center">
                                 <input
-                                    onChange={e => handleOptionsChange(option.id, {
-                                        ...option,
-                                        title: option.title,
-                                        isCorrect: e.target.checked
-                                    })}
+                                    onChange={e => {
+
+                                        clearActiveQuestionTooltipError()
+                                        handleOptionsChange(option.id, {
+                                            ...option,
+                                            title: option.title,
+                                            isCorrect: e.target.checked
+                                        })
+
+                                    }}
                                     checked={option.isCorrect} id="default-radio-2" type="radio" value=""
                                     name="default-radio"
                                     className="w-4 h-4 focus:bg-red-500 text-red-500  "/>
@@ -90,11 +101,15 @@ export default function ({
                                         placeholder='كيف تأكل الأسماك الماء'
                                         value={option.title}
                                         errors={optionsError.find(o => o.id == option.id)?.message ?? ''}
-                                        onChange={e => handleOptionsChange(option.id, {
-                                            ...option,
-                                            title: e.target.value,
-                                            isCorrect: option.isCorrect
-                                        })}
+                                        onChange={e => {
+
+                                            clearActiveQuestionTooltipError()
+                                            handleOptionsChange(option.id, {
+                                                ...option,
+                                                title: e.target.value,
+                                                isCorrect: option.isCorrect
+                                            })
+                                        }}
                                     />
                                 </label>
                                 {question.options.length > 2 && (

@@ -39,7 +39,7 @@ interface Option {
 
 export default () => {
 
-    const [step, setStep] = useState<'info' | 'questions' | 'invite'>('info')
+    const [step, setStep] = useState<'info' | 'questions' | 'invite'>('questions')
 
     const [isNextDisabled, setIsNextDisabled] = useState<boolean>(false)
 
@@ -76,24 +76,6 @@ export default () => {
 
     ])
 
-
-    const defaultQuestion = {
-        title: 'ما لون السمك في الماء',
-        id: Math.random(),
-        options: [
-            {
-                title: 'أحمر',
-                isCorrect: false,
-                id: Math.random(),
-            },
-
-            {
-                title: 'أزرق',
-                isCorrect: true,
-                id: Math.random(),
-            },
-        ]
-    }
 
     function handleNextStep() {
         if (step == 'info') {
