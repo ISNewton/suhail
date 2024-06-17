@@ -21,6 +21,7 @@ import QuestionsStep from "../../../Shared/Components/CreateTest/QuestionsStep";
 import InviteStep from "../../../Shared/Components/CreateTest/InviteStep";
 import {z} from "zod";
 import testInfoStep from "../../../Shared/Components/CreateTest/TestInfoStep";
+import TestCreatedStep from "../../../Shared/Components/CreateTest/TestCreatedStep";
 
 interface QuestionType {
     title: string,
@@ -41,7 +42,7 @@ interface Option {
 
 export default () => {
 
-    const [step, setStep] = useState<'info' | 'questions' | 'invite'>('info')
+    const [step, setStep] = useState<'info' | 'questions' | 'invite' | 'testCreated'>('info')
 
     const [isNextDisabled, setIsNextDisabled] = useState<boolean>(false)
 
@@ -114,8 +115,9 @@ export default () => {
 
 
         if (step == 'invite') {
-            setStep('info')
+            setStep('testCreated')
         }
+
 
     }
 
@@ -211,11 +213,21 @@ export default () => {
                             emails={studentsEmails} setEmails={setStudentsEmails} key={"questions"}
                             setNextButtonDisabled={setIsNextDisabled}/>}
 
-                    <div className="flex flex-row-reverse  justify-between items-end">
-                        <PrimaryButton disabled={isNextDisabled && tooltipMessage.length == 0} onClick={handleNextStep}
-                                       className="my-2 text-end">التالي</PrimaryButton>
 
-                        {step !== 'info' && (
+                    {step == 'testCreated' &&
+                        <TestCreatedStep
+                        />}
+
+                    <div className="flex flex-row-reverse  justify-between items-end">
+                        {!['testCreated'].includes(step) && (
+                            <
+                                PrimaryButton disabled={isNextDisabled && tooltipMessage.length == 0}
+                                              onClick={handleNextStep}
+                                              className="my-2 text-end">التالي</PrimaryButton>
+                        )
+                        }
+
+                        {!['info', 'testCreated'].includes(step) && (
 
                             <PrimaryButton disabled={isNextDisabled} onClick={handelPreviousStep}
                                            className="my-2 text-end">السابق</PrimaryButton>
