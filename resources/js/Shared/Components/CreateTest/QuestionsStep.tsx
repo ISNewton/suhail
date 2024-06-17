@@ -49,6 +49,18 @@ export default function ({questions, setQuestions}: Props) {
 
     function changeActiveQuestion(questionId: number) {
         // const titleValidation = parseQuestionTitleValidation()
+        const isTitleValid = validateTitle()
+        if (!isTitleValid) {
+            return
+        }
+
+
+        const isOptionsValid = validateOptions()
+        if (!isOptionsValid) {
+            console.log('not valid')
+            return
+        }
+
         const question = questions.find(q => q.id == questionId)
         if (question) {
 
@@ -144,22 +156,29 @@ export default function ({questions, setQuestions}: Props) {
             return
         }
 
+
+        const newQuestion =
+            {
+                title: 'سؤال جديد',
+                id: Math.random(),
+                options: [
+                    {
+                        title: 'أزرق',
+                        isCorrect: false,
+                        id: Math.random(),
+                    },
+                ],
+            }
+
         setQuestions(q => {
             return [
                 ...q,
-                {
-                    title: 'سؤال جديد',
-                    id: Math.random(),
-                    options: [
-                        {
-                            title: 'أزرق',
-                            isCorrect: false,
-                            id: Math.random(),
-                        },
-                    ],
-                }
+                newQuestion
+
             ]
         })
+
+        setActiveQuestion(newQuestion)
 
     }
 
@@ -275,7 +294,10 @@ export default function ({questions, setQuestions}: Props) {
 
                 ))}
                 <PrimaryButton
-                    onClick={addEmptyQuestion} className="font-bold cursor-pointer">
+                    onClick={addEmptyQuestion} className="
+                    font-normal
+                    flex items-center bg-white text-black hover:text-black  hover:bg-gray-200 w-fit p-2 rounded-lg cursor-pointer
+                    ">
                     <span>
                     <PlusIcon/>
                     </span>
