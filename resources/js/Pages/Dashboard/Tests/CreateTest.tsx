@@ -20,6 +20,7 @@ import TestInfoStep from "../../../Shared/Components/CreateTest/TestInfoStep";
 import QuestionsStep from "../../../Shared/Components/CreateTest/QuestionsStep";
 import InviteStep from "../../../Shared/Components/CreateTest/InviteStep";
 import {z} from "zod";
+import testInfoStep from "../../../Shared/Components/CreateTest/TestInfoStep";
 
 interface QuestionType {
     title: string,
@@ -40,7 +41,7 @@ interface Option {
 
 export default () => {
 
-    const [step, setStep] = useState<'info' | 'questions' | 'invite'>('questions')
+    const [step, setStep] = useState<'info' | 'questions' | 'invite'>('info')
 
     const [isNextDisabled, setIsNextDisabled] = useState<boolean>(false)
 
@@ -63,6 +64,8 @@ export default () => {
 
 
     const questionStepRef = useRef()
+    const testInfoStepRef = useRef()
+    const inviteStepRef = useRef()
 
     const [questions, setQuestions] = useState<QuestionType[]>([
         {
@@ -90,11 +93,18 @@ export default () => {
 
 
         if (step == 'info') {
-            setStep('questions')
+            const isReadyToSubmit = testInfoStepRef.current?.isReadyToSubmit()
+
+            console.log(isReadyToSubmit, testInfoStepRef.current)
+
+            if (isReadyToSubmit) {
+                setStep('questions')
+            }
+
         }
 
         if (step == 'questions') {
-            const isReadyToSubmit = questionStepRef.current.isReadyToSubmit()
+            const isReadyToSubmit = questionStepRef.current?.isReadyToSubmit()
 
             if (isReadyToSubmit) {
                 setStep('invite')
@@ -184,7 +194,10 @@ export default () => {
                 <div className="my-8 border rounded-lg p-12">
 
                     {step == 'info' &&
-                        <TestInfoStep testData={testInfoData} setTestData={setTestInfoData} key={"info"}/>}
+                        <TestInfoStep
+
+                            ref={testInfoStepRef}
+                            testData={testInfoData} setTestData={setTestInfoData} key={"info"}/>}
 
                     {step == 'questions' &&
                         <QuestionsStep
@@ -193,8 +206,10 @@ export default () => {
                             setTooltipMessage={setTooltipMessage}
                             questions={questions} setQuestions={setQuestions} key={"questions"}/>}
                     {step == 'invite' &&
-                        <InviteStep emails={studentsEmails} setEmails={setStudentsEmails} key={"questions"}
-                                    setNextButtonDisabled={setIsNextDisabled}/>}
+                        <InviteStep
+                            ref={inviteStepRef}
+                            emails={studentsEmails} setEmails={setStudentsEmails} key={"questions"}
+                            setNextButtonDisabled={setIsNextDisabled}/>}
 
                     <div className="flex flex-row-reverse  justify-between items-end">
                         <PrimaryButton disabled={isNextDisabled && tooltipMessage.length == 0} onClick={handleNextStep}

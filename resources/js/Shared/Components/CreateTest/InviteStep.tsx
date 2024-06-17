@@ -74,6 +74,10 @@ export default function ({emails, setEmails, ...props}: Props) {
             <div className="mb-2 block">
                 <h3 className={"h"}>
                     أدعوا طلابك للمشاركة في الاختبار
+                    <span className="text-green-500 mr-1">
+                        (اختياري)
+
+                    </span>
                 </h3>
 
                 <p className="text-red-500">{emailValidationMessage}</p>
@@ -96,7 +100,7 @@ export default function ({emails, setEmails, ...props}: Props) {
                     }}
                     onChange={(newValue) => setEmails(newValue)}
                     onKeyDown={e => handleKeyDown(e)}
-                    placeholder="Type something and press enter..."
+                    placeholder="أدخل عنوان البريد الالكترني ثم اضغط على زر Enter"
                     value={emails}
                 />
             </div>
