@@ -18,41 +18,17 @@ interface QuestionOptionType {
     isCorrect: boolean
 }
 
-export default function (props: any) {
+interface Props {
+    questions: QuestionType[]
+    setQuestions: Function
+}
 
-    const defaultQuestion = {
-        title: 'ما لون السمك في الماء',
-        id: Math.random(),
-        options: [
-            {
-                title: 'أزرق',
-                isCorrect: true,
-                id: Math.random(),
-            },
-            {
-                title: 'أزرق',
-                isCorrect: false,
-                id: Math.random(),
-            },
-
-            {
-                title: 'أزرق',
-                isCorrect: false,
-                id: Math.random(),
-            },
-
-            {
-                title: 'أزرق',
-                isCorrect: false,
-                id: Math.random(),
-            },
-        ]
-    }
+export default function ({questions, setQuestions}: Props) {
 
 
-    const [questions, setQuestions] = useState<QuestionType[]>([
-        defaultQuestion
-    ])
+    // const [questions, setQuestions] = useState<QuestionType[]>([
+    //     defaultQuestion
+    // ])
 
     const [titleError, setTitleError] = useState<string>('')
 

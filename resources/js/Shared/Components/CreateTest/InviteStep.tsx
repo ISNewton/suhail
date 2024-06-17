@@ -7,8 +7,6 @@ import PrimaryButton from "../../PrimaryButton";
 import {Label} from "flowbite-react";
 import Select from "react-select";
 import CreatableSelect from 'react-select/creatable';
-import MultiSelectInvite from "./MultiSelectInvite";
-
 
 interface Option {
     readonly label: string;
@@ -17,16 +15,16 @@ interface Option {
 
 interface Props {
     setNextButtonDisabled: Function
-
+    emails: readonly Option[]
+    setEmails: Function
 }
 
-export default function (props: Props) {
+export default function ({emails, setEmails, ...props}: Props) {
 
-    const [emails, setEmails] = useState<string[]>([])
     const [emailValidationMessage, setEmailValidationMessage] = useState<string>("")
 
     const [inputValue, setInputValue] = React.useState('');
-    const [value, setValue] = React.useState<readonly Option[]>([]);
+    // const [value, setValue] = React.useState<readonly Option[]>([]);
 
 
     const createOption = (label: string) => ({
@@ -38,8 +36,8 @@ export default function (props: Props) {
     function validateEmail(email: string) {
         const schema = z.string().email({message: "البريد الالكتروني غير صحيح"})
             .refine((e) => {
-                const emails = value.map(v => v.value)
-                return emails.includes(e) ? false : true
+                const verifiedEmails = emails.map(v => v.value)
+                return !verifiedEmails.includes(e)
 
             }, "البريد الالكتروني مستخدم بالفعل")
 
@@ -65,7 +63,7 @@ export default function (props: Props) {
         switch (event.key) {
             case 'Enter':
             case 'Tab':
-                setValue((prev) => [...prev, createOption(inputValue)]);
+                setEmails((prev) => [...prev, createOption(inputValue)]);
                 setInputValue('');
                 event.preventDefault();
         }
@@ -96,10 +94,10 @@ export default function (props: Props) {
                         setInputValue(newValue)
 
                     }}
-                    onChange={(newValue) => setValue(newValue)}
+                    onChange={(newValue) => setEmails(newValue)}
                     onKeyDown={e => handleKeyDown(e)}
                     placeholder="Type something and press enter..."
-                    value={value}
+                    value={emails}
                 />
             </div>
 

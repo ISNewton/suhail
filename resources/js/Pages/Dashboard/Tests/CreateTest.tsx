@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import React, {useState} from 'react'
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -20,6 +20,23 @@ import TestInfoStep from "../../../Shared/Components/CreateTest/TestInfoStep";
 import QuestionsStep from "../../../Shared/Components/CreateTest/QuestionsStep";
 import InviteStep from "../../../Shared/Components/CreateTest/InviteStep";
 
+interface QuestionType {
+    title: string,
+    id: number,
+    options: QuestionOptionType[]
+}
+
+interface QuestionOptionType {
+    id: number,
+    title: string
+    isCorrect: boolean
+}
+
+interface Option {
+    readonly label: string;
+    readonly value: string;
+}
+
 export default () => {
 
     const [step, setStep] = useState<'info' | 'questions' | 'invite'>('info')
@@ -33,6 +50,50 @@ export default () => {
         title: '',
         type: 'public',
     })
+
+
+    const [studentsEmails, setStudentsEmails] = React.useState<readonly Option[]>([]);
+
+
+    const [questions, setQuestions] = useState<QuestionType[]>([
+        {
+            title: 'ما لون السمك في الماء',
+            id: Math.random(),
+            options: [
+                {
+                    title: 'أحمر',
+                    isCorrect: false,
+                    id: Math.random(),
+                },
+
+                {
+                    title: 'أزرق',
+                    isCorrect: true,
+                    id: Math.random(),
+                },
+            ]
+        }
+
+    ])
+
+
+    const defaultQuestion = {
+        title: 'ما لون السمك في الماء',
+        id: Math.random(),
+        options: [
+            {
+                title: 'أحمر',
+                isCorrect: false,
+                id: Math.random(),
+            },
+
+            {
+                title: 'أزرق',
+                isCorrect: true,
+                id: Math.random(),
+            },
+        ]
+    }
 
     function handleNextStep() {
         if (step == 'info') {
@@ -126,8 +187,11 @@ export default () => {
 
                     {step == 'info' &&
                         <TestInfoStep testData={testInfoData} setTestData={setTestInfoData} key={"info"}/>}
-                    {step == 'questions' && <QuestionsStep key={"questions"}/>}
-                    {step == 'invite' && <InviteStep key={"questions"} setNextButtonDisabled={setIsNextDisabled}/>}
+                    {step == 'questions' &&
+                        <QuestionsStep questions={questions} setQuestions={setQuestions} key={"questions"}/>}
+                    {step == 'invite' &&
+                        <InviteStep emails={studentsEmails} setEmails={setStudentsEmails} key={"questions"}
+                                    setNextButtonDisabled={setIsNextDisabled}/>}
 
                     <div className="flex flex-row-reverse  justify-between items-end">
                         <PrimaryButton disabled={isNextDisabled} onClick={handleNextStep}
