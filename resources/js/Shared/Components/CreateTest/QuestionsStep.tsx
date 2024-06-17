@@ -114,6 +114,23 @@ export default function ({questions, setQuestions, tooltipMessage, setTooltipMes
 
         }
         const schema = z.string().min(6)
+            .refine(value => {
+                const titles = questions
+
+                    .filter(q => q.id !== activeQuestion.id)
+                    .map(q => q.title)
+
+                console.log(titles, value)
+
+                if (!titles) {
+                    return true
+
+                }
+
+                return !titles.includes(value)
+
+
+            }, 'عنوان السؤال مكرر')
         const validation = schema.safeParse(activeQuestion.title)
 
         if (validation.success) {
@@ -337,6 +354,47 @@ export default function ({questions, setQuestions, tooltipMessage, setTooltipMes
 
 
         }
+    }
+
+    function isReadyToSubmit(): boolean {
+
+
+        if (activeQuestion) {
+
+            const isTitleValid = validateTitle()
+            if (!isTitleValid) {
+                setTooltipMessage(prev => {
+                    return [
+                        ...prev,
+                        {
+                            id: activeQuestion?.id,
+                            message: "يحتوي هذا السؤال على خطأ"
+
+                        }
+                    ]
+                })
+                return false
+            }
+
+
+            const isOptionsValid = validateOptions()
+            if (!isOptionsValid) {
+                setTooltipMessage(prev => {
+                    return [
+                        ...prev,
+                        {
+                            id: activeQuestion?.id,
+                            message: "يحتوي هذا السؤال على خطأ"
+
+                        }
+                    ]
+                })
+                return false
+            }
+
+        }
+
+
     }
 
 
