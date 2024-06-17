@@ -19,6 +19,7 @@ import PrimaryButton from "../../../Shared/PrimaryButton";
 import TestInfoStep from "../../../Shared/Components/CreateTest/TestInfoStep";
 import QuestionsStep from "../../../Shared/Components/CreateTest/QuestionsStep";
 import InviteStep from "../../../Shared/Components/CreateTest/InviteStep";
+import {z} from "zod";
 
 interface QuestionType {
     title: string,
@@ -54,6 +55,11 @@ export default () => {
 
     const [studentsEmails, setStudentsEmails] = React.useState<readonly Option[]>([]);
 
+
+    const [tooltipMessage, setTooltipMessage] = useState<{
+        id: number
+        message: string
+    }[]>([])
 
     const [questions, setQuestions] = useState<QuestionType[]>([
         {
@@ -169,14 +175,19 @@ export default () => {
 
                     {step == 'info' &&
                         <TestInfoStep testData={testInfoData} setTestData={setTestInfoData} key={"info"}/>}
+
                     {step == 'questions' &&
-                        <QuestionsStep questions={questions} setQuestions={setQuestions} key={"questions"}/>}
+                        <QuestionsStep
+                            tooltipMessage={tooltipMessage}
+                            setTooltipMessage={setTooltipMessage}
+                            questions={questions} setQuestions={setQuestions} key={"questions"}/>}
+
                     {step == 'invite' &&
                         <InviteStep emails={studentsEmails} setEmails={setStudentsEmails} key={"questions"}
                                     setNextButtonDisabled={setIsNextDisabled}/>}
 
                     <div className="flex flex-row-reverse  justify-between items-end">
-                        <PrimaryButton disabled={isNextDisabled} onClick={handleNextStep}
+                        <PrimaryButton disabled={isNextDisabled && tooltipMessage.length == 0} onClick={handleNextStep}
                                        className="my-2 text-end">التالي</PrimaryButton>
 
                         {step !== 'info' && (

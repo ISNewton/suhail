@@ -22,16 +22,13 @@ interface QuestionOptionType {
 interface Props {
     questions: QuestionType[]
     setQuestions: Function
+    tooltipMessage: { id: number, message: string }[]
+    setTooltipMessage: Function
 }
 
-export default function ({questions, setQuestions}: Props) {
+export default function ({questions, setQuestions, tooltipMessage, setTooltipMessage}: Props) {
 
     // const [toolTipMessage, setToolTipMessage] = useState("")
-
-    const [tooltipMessage, setTooltipMessage] = useState<{
-        id: number
-        message: string
-    }[]>([])
 
 
     const [titleError, setTitleError] = useState<string>('')
@@ -325,8 +322,20 @@ export default function ({questions, setQuestions}: Props) {
                 return q.filter(question => question.id != id)
             }
         )
-        if (activeQuestion?.id == id) {
-            setActiveQuestion(null)
+        if (!activeQuestion) {
+            return
+        }
+
+        if (activeQuestion.id == id) {
+            if (questions.length > 1) {
+                setActiveQuestion(questions[0])
+
+            } else {
+
+                setActiveQuestion(null)
+            }
+
+
         }
     }
 
