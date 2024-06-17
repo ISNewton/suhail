@@ -36,7 +36,8 @@ class TestController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return Inertia::render('Dashboard/Tests/ShowTest');
+
     }
 
     /**
