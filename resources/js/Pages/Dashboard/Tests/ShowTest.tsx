@@ -8,7 +8,7 @@ import {
     BreadcrumbSeparator,
 } from "@/Components/ui/breadcrumb"
 import {Link} from "@inertiajs/react";
-import {FileIcon, HomeIcon, InfoIcon, PenIcon} from "lucide-react";
+import {FileIcon, HomeIcon, InfoIcon, PaperclipIcon, PenIcon} from "lucide-react";
 import DashboardMenu from "../../../Shared/Components/DashboardMenu";
 import LargeTitle from "../../../Shared/LargeTitle";
 import TestCard from "../../../Shared/Components/TestCard";
@@ -22,11 +22,17 @@ import InviteStep from "../../../Shared/Components/CreateTest/InviteStep";
 import {z} from "zod";
 import testInfoStep from "../../../Shared/Components/CreateTest/TestInfoStep";
 import TestCreatedStep from "../../../Shared/Components/CreateTest/TestCreatedStep";
+import ReportsCards from "../../../Shared/Components/ShowTest/ReportsCards";
 
 
 export default () => {
     const test = {
         title: 'اختبار عملي حاسوب',
+    }
+    const [selectedOption, setSelectedOption] = useState<'students' | 'reports' | 'settings' | 'questions'>('reports')
+
+    function isSelected(option: string) {
+        return option == selectedOption ? 'border-black' : 'border-none'
     }
 
     return (
@@ -35,26 +41,27 @@ export default () => {
                 <BreadcrumbList>
                     <BreadcrumbItem>
                         <BreadcrumbLink>
-                            <Link as={'div'} className=" flex gap-3 items-bottom justify-between" to="/dashboard">
+                            <Link as={'div'} className=" cursor-pointer flex gap-3 items-bottom justify-between"
+                                  href="/dashboard">
                                 <span>
                                 <HomeIcon size={'18'}/>
                                 </span>
                                 <span>
-                                الاختبارات
+                                الرئيسية
                                 </span>
                             </Link>
                         </BreadcrumbLink>
 
                         <BreadcrumbSeparator/>
                         <BreadcrumbLink>
-                            <Link as={'div'} className=" flex gap-3 items-bottom justify-between" to="/dashboard">
+                            <div className=" flex gap-3 items-bottom justify-between">
                                 <span>
-                                <PenIcon size={'18'}/>
+                                <PaperclipIcon size={'18'}/>
                                 </span>
                                 <span>
-                                الاختبارات
+                                {test.title}
                                 </span>
-                            </Link>
+                            </div>
                         </BreadcrumbLink>
                     </BreadcrumbItem>
                 </BreadcrumbList>
@@ -65,7 +72,27 @@ export default () => {
                     <span>{test.title}</span>
                 </h1>
 
-                <div className="my-8 border rounded-lg p-12">
+                <div className="my-8   p-12">
+                    <div className="my-8">
+                        <div className='flex justify-start border-b-2 '>
+                            <p onClick={() => setSelectedOption('reports')}
+                               className={`border-b-2 ${isSelected('reports')} px-4 cursor-pointer`}>الاحصائيات</p>
+                            <p onClick={() => setSelectedOption('questions')}
+                               className={`border-b-2 ${isSelected('questions')} px-4 cursor-pointer`}>أسئلة
+                                الاختبار</p>
+                            <p onClick={() => setSelectedOption('students')}
+                               className={`border-b-2 ${isSelected('students')} px-4 cursor-pointer`}>الطلاب</p>
+
+                            <p onClick={() => setSelectedOption('settings')}
+                               className={`border-b-2 ${isSelected('settings')} px-4 cursor-pointer`}>اعدادات
+                                الاختبار</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div>
+                    <ReportsCards/>
 
                 </div>
 
